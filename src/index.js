@@ -18,10 +18,9 @@ app.get("/browser/:name", async (req, res) => {
   console.log(`Incoming request for browser '${browserName}' and URL '${url}'`)
   try {
     /** @type {import('playwright-chromium').Browser} */
-    const browser = await { chromium, firefox }[browserName].launch({
-      chromiumSandbox: false
-    })
-    const page = await browser.newPage({
+    const browser = await firefox.launch({ chromiumSandbox: false });
+    const context = await browser.newContext();
+    const page = await context.newPage({
       viewport: {
         width,
         height
@@ -42,7 +41,8 @@ app.get("/browser/:name", async (req, res) => {
     res.set("Content-Disposition", "inline;");
     res.send(data)
   } catch (err) {
-    res.status(500).send(`Something went wrong: ${err}`)
+    res.status(500).send(`Something went wrong: ${err}`);
+    console.error(err);
   }
 });
 
