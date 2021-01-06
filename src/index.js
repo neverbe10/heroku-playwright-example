@@ -27,8 +27,7 @@ app.get("/browser/:name", async (req, res) => {
       }
     })
     await page.goto(url, {
-      timeout: 10 * 1000,
-      waitUntil
+      waitUntil: "networkidle"
     })
     if (req.query.timeout) {
       await page.waitForTimeout(parseInt(req.query.timeout, 10))
